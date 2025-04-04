@@ -3,13 +3,13 @@ import base64
 from typing import Dict, Any
 
 from ..core.rabbitmq import send_message, poll_result
-from ..models.general_ocr import OCRRequest, OCRResponse, Image # 모델 임포트 경로 수정
+from ..models.general_ocr import OCRRequest, Image # 모델 임포트 경로 수정
 from ..core.config import DEFAULT_OCR_TIMEOUT
 
 # General OCR 요청 큐 이름
 GENERAL_OCR_QUEUE = "recognition.general.requests"
 
-async def process_general_ocr(request: OCRRequest) -> OCRResponse:
+async def process_general_ocr(request: OCRRequest):
     """General OCR 요청을 처리하고 결과를 반환합니다."""
     try:
         # Pydantic 모델을 dict로 변환하여 메시지 생성
@@ -54,7 +54,7 @@ async def process_general_ocr(request: OCRRequest) -> OCRResponse:
         print(f"General OCR 처리 중 오류 발생: {e}")
         raise HTTPException(status_code=500, detail=f"General OCR 처리 중 오류: {str(e)}")
 
-async def process_general_ocr_file(file: UploadFile) -> OCRResponse:
+async def process_general_ocr_file(file: UploadFile):
     """파일 업로드를 통한 General OCR 요청을 처리합니다."""
     # 파일 사이즈 제한 확인 (예: 10MB)
     MAX_FILE_SIZE = 10 * 1024 * 1024

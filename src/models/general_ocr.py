@@ -36,8 +36,3 @@ class PageResult(BaseModel):
     page: int
     lines: List[Line]
     # 필요한 경우 다른 필드 추가 가능 (예: confidence, language)
-
-class OCRResponse(BaseModel):
-    result: Optional[List[PageResult]] = None # 결과가 없을 수도 있음
-    requestId: str
-    error: Optional[Dict[str, Any]] = None # 오류 발생 시 정보 포함 

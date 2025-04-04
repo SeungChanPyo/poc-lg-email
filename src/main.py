@@ -4,7 +4,7 @@ import uvicorn
 
 # 설정 및 API 라우터 임포트 경로 수정
 from .core.config import API_HOST, API_PORT
-from .api import general_ocr # api 폴더의 ocr 모듈 임포트
+from .api import ocr # api 폴더의 ocr 모듈 임포트
 from .api import extract_table
 # FastAPI 앱 생성
 app = FastAPI(
@@ -24,7 +24,7 @@ app.add_middleware(
 )
 
 # API 라우터 등록
-app.include_router(general_ocr.router) # OCR 관련 라우터 등록
+app.include_router(ocr.router) # OCR 관련 라우터 등록
 app.include_router(extract_table.router)
 
 # 루트 엔드포인트
