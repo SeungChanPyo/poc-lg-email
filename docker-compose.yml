@@ -1,0 +1,102 @@
+version: '3.8' # Docker Compose 파일 버전 지정
+
+services:
+  aicenter-api:
+    image: ${API_IMAGE}
+    container_name: aicenter-api
+    ports:
+      - "8000:8000"
+    environment:
+      - API_HOST=192.168.14.141
+      - API_PORT=8000
+      - RABBITMQ_HOST=192.168.14.141
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=dusrnth
+      - RABBITMQ_PASS=eden123!
+
+# RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "localhost")
+# RABBITMQ_PORT = int(os.environ.get("RABBITMQ_PORT", "5672")) # 포트는 정수형으로 변환
+# RABBITMQ_USER = os.environ.get("RABBITMQ_USER", "dusrnth")
+# RABBITMQ_PASS = os.environ.get("RABBITMQ_PASS", "eden123!")
+    volumes:
+      - ./src:/app/src
+    networks:
+      - aicenter-network
+    restart: always
+
+  aicenter-rabbitmq:
+    image: ${RABBITMQ_IMAGE}
+    container_name: aicenter-rabbitmq
+    ports:
+      - 4369:4369
+      - 5672:5672
+      - 25672:25672
+      - 15672:15672
+    restart: always
+    networks:
+      - aicenter-network
+
+  ai-engine-train:
+    image: ${ENGINE_IMAGE}
+    container_name: aicenter-train
+    command: python3 src/main.py
+    runtime: nvidia
+    ipc: host
+    pid: host
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TOKENIZERS_PARALLELISM=false
+      - TZ=Asia/Seoul
+      - TORCH_CUDA_ARCH_LIST=8.6
+      - HOST=aicenter-rabbitmq
+      - PORT=5672
+      - MODE=train
+      - CUDA_VISIBLE_DEVICES=0
+    volumes:
+      # - ${ENGINE_VOL_DIR}:/eden/aicenter-engine 2404 버전 설정
+      - ${ROOT_DIR}/aicenter-engine/model:/eden/aicenter-engine/model
+      - ${ROOT_DIR}/aicenter-engine/src:/eden/aicenter-engine/src
+      - ${ROOT_DIR}/engine_logs:/eden/aicenter-engine/logs
+    logging:
+          driver: "json-file"
+          options: 
+              max-size: "300k"
+              max-file: "10"
+    restart: always
+    networks:
+      - aicenter-network
+
+  ai-engine-test:
+    image: ${ENGINE_IMAGE}
+    container_name: aicenter-test
+    command: python3 src/main.py
+    runtime: nvidia
+    ipc: host
+    pid: host
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TOKENIZERS_PARALLELISM=false
+      - TZ=Asia/Seoul
+      - TORCH_CUDA_ARCH_LIST=8.6
+      - HOST=aicenter-rabbitmq
+      - PORT=5672
+      - MODE=recognition
+      - CUDA_VISIBLE_DEVICES=0
+      # - CUDA_LAUNCH_BLOCKING=1 # cuda debugging
+    volumes:
+      #- ${ENGINE_VOL_DIR}:/eden/aicenter-engine 2404 릴리즈 버전 설정
+      - ${ROOT_DIR}/aicenter-engine/model:/eden/aicenter-engine/model
+      - ${ROOT_DIR}/aicenter-engine/src:/eden/aicenter-engine/src
+      - ${ROOT_DIR}/engine_logs:/eden/aicenter-engine/logs
+    logging:
+            driver: "json-file"
+            options: 
+                max-size: "300k"
+                max-file: "10"
+    restart: always
+    networks:
+      - aicenter-network
+
+networks:
+  aicenter-network:
+    driver: bridge
