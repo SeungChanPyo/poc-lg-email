@@ -3,7 +3,7 @@ import base64
 from typing import Dict, Any
 
 from ..core.rabbitmq import send_message, poll_result
-from ..models.ocr import OCRRequest, OCRResponse, Image # 모델 임포트 경로 수정
+from ..models.general_ocr import OCRRequest, OCRResponse, Image # 모델 임포트 경로 수정
 from ..core.config import DEFAULT_OCR_TIMEOUT
 
 # General OCR 요청 큐 이름

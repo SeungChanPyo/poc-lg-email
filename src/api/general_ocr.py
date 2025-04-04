@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, Depends
 
 # 의존성 주입 및 서비스 로직 임포트 경로 수정
-from ..models.ocr import OCRRequest, OCRResponse
+from ..models.general_ocr import OCRRequest, OCRResponse
 from ..services.general_ocr_service import process_general_ocr, process_general_ocr_file
 
 router = APIRouter(
