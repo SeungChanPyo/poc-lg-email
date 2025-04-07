@@ -11,12 +11,24 @@ ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH=/app
 
 # 시스템 패키지 설치치
+# RUN apt-get update && apt-get install -y \
+#     build-essential \
+#     libglib2.0-0 \
+#     libsm6 \
+#     libxrender1 \
+#     libxext6 \
+#     poppler-utils \
+#     ghostscript \
+#     && rm -rf /var/lib/apt/lists/*
+
+# 시스템 패키지 설치
 RUN apt-get update && apt-get install -y \
     build-essential \
     libglib2.0-0 \
     libsm6 \
     libxrender1 \
     libxext6 \
+    libgl1-mesa-glx \ 
     poppler-utils \
     ghostscript \
     && rm -rf /var/lib/apt/lists/*
