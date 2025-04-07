@@ -10,6 +10,29 @@ ENV PYTHONUNBUFFERED 1
 # PYTHONPATH 설정 (src 폴더를 모듈 검색 경로에 추가)
 ENV PYTHONPATH=/app
 
+# 시스템 패키지 설치치
+# RUN apt-get update && apt-get install -y \
+#     build-essential \
+#     libglib2.0-0 \
+#     libsm6 \
+#     libxrender1 \
+#     libxext6 \
+#     poppler-utils \
+#     ghostscript \
+#     && rm -rf /var/lib/apt/lists/*
+
+# 시스템 패키지 설치
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libglib2.0-0 \
+    libsm6 \
+    libxrender1 \
+    libxext6 \
+    libgl1-mesa-glx \ 
+    poppler-utils \
+    ghostscript \
+    && rm -rf /var/lib/apt/lists/*
+
 # 4. 의존성 파일 복사 및 설치
 # requirements.txt만 먼저 복사하여 레이어 캐싱 활용
 COPY requirements.txt .

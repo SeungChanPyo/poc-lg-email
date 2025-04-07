@@ -13,4 +13,4 @@ API_HOST = os.environ.get("API_HOST")
 API_PORT = os.environ.get("API_PORT")
 
 # OCR 기본 타임아웃 (초)
-DEFAULT_OCR_TIMEOUT = 60 
+DEFAULT_OCR_TIMEOUT = 300
