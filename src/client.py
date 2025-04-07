@@ -4,7 +4,7 @@ import base64
 
 GENERAL_OCR = "http://192.168.14.141:8000/document/general"
 DOCUMENT_OCR = "http://192.168.14.141:8000/domain-document"
-URL2 = "http://192.168.14.141:8000/document/general/file"
+DOMAIN_OCR = "https://ocr.edentns.ai/document/general"
 HEADERS = {"Content-type" : "application/json"}
 
 
@@ -13,8 +13,9 @@ def base64_encode(filePath):
         encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
     return encoded_string
 
-def general_ocr(img):
-    img = "/mnt/hdd1/seungchan/aicenter-api/계약서 샘플 (1).pdf"
+
+def general_ocr(img, URL):
+    # img = "/mnt/hdd1/seungchan/aicenter-api/계약서 샘플 (1).pdf"
     base64_img = base64_encode(img)
     
     request = {
@@ -23,11 +24,11 @@ def general_ocr(img):
         "timestamp": 0,
         "images": [
             {
-                "format": "pdf",
+                "format": "png",
                 "data": base64_img,
                 "name" : "1.png",
                 "option": {
-                    "pageRange": [3]
+                    "pageRange": []
                 }
             }
         ],
@@ -35,7 +36,8 @@ def general_ocr(img):
         "modelType": "UNIVERSAL"
     }
     
-    response= requests.post(GENERAL_OCR, headers=HEADERS, json=request)
+    response= requests.post(URL, headers=HEADERS, json=request)
+    print(response.json())
     return response
 
 def document_ocr(img):
@@ -67,8 +69,9 @@ def document_ocr(img):
 
 if __name__ == "__main__":
     img = "/mnt/hdd1/seungchan/aicenter-api/extracted_page.pdf"
-
-    # general_ocr_result = general_ocr(img)
-    document_ocr_result = document_ocr(img)
+    img = "/mnt/hdd/eden/aicenter-engine/src/merge_4.png"
+    URL = DOMAIN_OCR
+    general_ocr_result = general_ocr(img, URL)
+    # document_ocr_result = document_ocr(img, URL)
     # response1 = requests.post(URL1, headers=HEADERS, json=request1)
     # print(response1)

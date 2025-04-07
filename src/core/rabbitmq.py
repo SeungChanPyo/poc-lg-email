@@ -71,7 +71,13 @@ def send_message(queue_name: str, message: Dict[str, Any]) -> str:
             connection.close()
 
 def poll_result(queue_name: str, correlation_id: str, timeout: int = DEFAULT_OCR_TIMEOUT) -> Dict[str, Any]:
-    """결과 큐에서 특정 correlation_id를 가진 메시지를 폴링합니다."""
+    """
+    결과 큐에서 특정 correlation_id를 가진 메시지를 폴링합니다.
+    테스트 해 본 결과 polling 하는 순간 FastAPI에서 제공하는 비동기 호출을 사실상 사용 안하는 꼴...
+    요청1, 요청 2 동시에 들어오면 요청 1 처리 끝나고 요청 2 처리함함
+    우선은 기능 동작이 필요해서 이렇게 놔두지만 추후 비동기로 응답이 오지 않아도 rabbitmq에 요청을 보내게끔 해야함
+    -> 받은 요청들은 rabbitmq가 알아서 순서대로 처리하기 때문
+    """
     result_queue = f"{queue_name}.results"
     print(f"결과 폴링 시작: queue={result_queue}, correlation_id={correlation_id}, timeout={timeout}초")
     connection = None
