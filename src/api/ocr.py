@@ -40,6 +40,11 @@ async def document_ocr_endpoint(
     ocrType: str, 
     request: DocumentOCRRequest
     ):
+    """
+    DocumentOCR API - JSON 요청 본문을 사용하여 OCR을 수행합니다.
+    domainId와 templateId를 Parameter로 직접 받아 requestId를 생성합니다.
+    엔진으로 이미지 데이터를 전송하고 인식 결과를 반환합니다.
+    """
     request.requestId = f"{domainId}_{templateId}"
     request.ocrType = ocrType
     return await process_document_ocr(request)

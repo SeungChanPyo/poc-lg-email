@@ -1,18 +1,19 @@
 from fastapi import HTTPException, UploadFile
 import base64
 from typing import Dict, Any
-from ..table_extractor import table_extract
+from ..table_extractor.table_extract import pdf_table_extract
 import fitz
 
 
-def extract_table_from_pdf(request):
+async def process_extract_table(request):
     filename = request.file.filename
     if not filename.lower().endswith(".pdf"):
         return {"result" : "", "errcd" : "02"}
     
     try:
         pdf_object = request.file.file
-        return {"result" : "", "erred" : "00"}
+        result = await pdf_table_extract(pdf_object)
+        return {"result" : result, "erred" : "00"}
     except:
         return {"result" : "", "errcd" : "03"}
     

@@ -10,7 +10,7 @@ from ..core.config import DEFAULT_OCR_TIMEOUT
 DOCUMENT_OCR_QUEUE = "recognition.domain_document.requests"
 
 async def process_document_ocr(request: DocumentOCRRequest):
-    """General OCR 요청을 처리하고 결과를 반환합니다."""
+    """Document OCR 요청을 처리하고 결과를 반환합니다."""
     try:
         # Pydantic 모델을 dict로 변환하여 메시지 생성
         message = request.dict()
@@ -51,7 +51,7 @@ async def process_document_ocr(request: DocumentOCRRequest):
         raise http_exc
     except Exception as e:
         # 기타 예외 처리
-        print(f"General OCR 처리 중 오류 발생: {e}")
+        print(f"Document OCR 처리 중 오류 발생: {e}")
         raise HTTPException(status_code=500, detail=f"General OCR 처리 중 오류: {str(e)}")
 
 # async def process_general_ocr_file(file: UploadFile):
