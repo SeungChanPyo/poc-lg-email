@@ -5,7 +5,7 @@ import time
 
 # 요청 모델 (코틀린 API와 유사한 형식)
 class ImageOption(BaseModel):
-    pageRange: Optional[List[int]]
+    pageRange: List[int] = Field(default_factory=list)
 
 class BaseImage(BaseModel):
     format: str
@@ -13,7 +13,7 @@ class BaseImage(BaseModel):
     name: str
     
 class OptionImage(BaseImage):
-    option: Optional[ImageOption]
+    option: ImageOption = Field(default_factory=ImageOption)
 
 class OCRRequest(BaseModel):
     version: str = "v2" # 기본값 설정
