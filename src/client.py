@@ -4,8 +4,11 @@ import base64
 
 GENERAL_OCR = "http://192.168.14.141:8000/document/general"
 DOCUMENT_OCR = "http://192.168.14.141:8000/domain-document"
-DOMAIN_DOCUMENT_OCR = "https://ocr.edentns.ai/domain-document"
+TABLE_OCR = "http://192.168.14.141:8000/document/table"
+
 DOMAIN_OCR = "https://ocr.edentns.ai/document/general"
+DOMAIN_TABLE_OCR = "https://ocr.edentns.ai/document/table"
+DOMAIN_DOCUMENT_OCR = "https://ocr.edentns.ai/domain-document"
 HEADERS = {"Content-type" : "application/json"}
 
 
@@ -41,6 +44,33 @@ def general_ocr(img, URL):
     print(response.json())
     return response
 
+def table_ocr(img, URL):
+    base64_img = base64_encode(img)
+    request = {
+        "version": "string",
+        "requestId": "string",
+        "timestamp": 0,
+        "images": [
+            {
+                "format": "png",
+                "data": base64_img,
+                "name" : "1.png",
+                "tableOption": [
+                    {
+                    "pageRange": [
+                    ],
+                    "tableClue": [
+                    ]
+                }
+                ]
+            }
+        ],
+        "details": "linemode=true",
+    }
+    response = requests.post(URL, headers=HEADERS, json=request)
+    print(response.json())
+    return response
+
 def document_ocr(img, URL):
     base64_img = base64_encode(img)
     request = {
@@ -70,11 +100,13 @@ def document_ocr(img, URL):
     return response
 
 if __name__ == "__main__":
-    img = "/mnt/hdd1/seungchan/aicenter-api/extracted_page.pdf"
-    # img = "/mnt/hdd/eden/aicenter-engine/src/merge_4.png"
+    # img = "/mnt/hdd1/seungchan/aicenter-api/계약서 샘플 (1).pdf"
+    img = "/mnt/hdd1/seungchan/aicenter-api/extracted_page.png"
     URL1 = DOMAIN_OCR
-    URL2 = DOMAIN_DOCUMENT_OCR
-    general_ocr_result = general_ocr(img, URL1)
-    document_ocr_result = document_ocr(img, URL2)
+    URL2 = TABLE_OCR
+    URL3 = DOMAIN_DOCUMENT_OCR
+    # general_ocr_result = general_ocr(img, URL1)
+    table_ocr_result = table_ocr(img, URL2)
+    # document_ocr_result = document_ocr(img, URL3)
     # response1 = requests.post(URL1, headers=HEADERS, json=request1)
     # print(response1)

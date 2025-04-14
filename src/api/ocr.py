@@ -3,8 +3,11 @@ from fastapi import APIRouter, UploadFile, File, Depends
 # 의존성 주입 및 서비스 로직 임포트 경로 수정
 from ..models.general_ocr import OCRRequest
 from ..models.document_ocr import DocumentOCRRequest
+from ..models.table_ocr import TableOCRRequest
+
 from ..services.general_ocr_service import process_general_ocr, process_general_ocr_file
 from ..services.document_ocr_service import process_document_ocr
+from ..services.table_ocr_service import process_table_ocr
 
 router = APIRouter(
     tags=["recognition-controller"]      # API 문서 그룹화 태그
@@ -29,9 +32,14 @@ async def general_ocr_file_endpoint(file: UploadFile = File(...)):
     # 서비스 계층의 파일 처리 함수 호출
     return await process_general_ocr_file(file)
 
-# @router.post("/domain-document")
-# async def document_ocr_endpoint(request: DocumentOCRRequest):
-#     return await process_document_ocr(request)
+@router.post("/document/table")
+async def table_ocr_endpoint(request: TableOCRRequest):
+    """
+    TableOCR API - Table OCR을 수행합니다.
+    엔진으로 데이터를 전송하고 인식 결과를 반환합니다
+    """
+    print("Table OCR Called")
+    return await process_table_ocr(request)
 
 @router.post("/domain-document")
 async def document_ocr_endpoint(
