@@ -53,6 +53,7 @@ async def document_ocr_endpoint(
     domainId와 templateId를 Parameter로 직접 받아 requestId를 생성합니다.
     엔진으로 이미지 데이터를 전송하고 인식 결과를 반환합니다.
     """
+    print("Document OCR Called")
     request.requestId = f"{domainId}_{templateId}"
     request.ocrType = ocrType
     return await process_document_ocr(request)
@@ -63,6 +64,7 @@ async def document_biz_license_ocr_endpoint(request: DocumentOCRRequest):
     DocumentOCR API - JSON 요청 본문을 사용하여 OCR을 수행합니다.
     사전 학습된 사업자등록증 모델의 인식 결과를 반환합니다.
     """
+    print("biz-license OCR Called")
     return await process_biz_licence_ocr(request)
 
 @router.post("/document/biz-card")
@@ -71,6 +73,7 @@ async def document_biz_card_ocr_endpoint(request: DocumentOCRRequest):
     DocumentOCR API - JSON 요청 본문을 사용하여 OCR을 수행합니다.
     사전 학습된 명함 모델의 인식 결과를 반환합니다.
     """
+    print("biz-card OCR Called")
     return await process_biz_card_ocr(request)
 
 @router.post("/document/id-card")
@@ -79,6 +82,7 @@ async def document_id_card_ocr_endpoint(request: DocumentOCRRequest):
     DocumentOCR API - JSON 요청 본문을 사용하여 OCR을 수행합니다.
     사전 학습된 주민등록증 모델의 인식 결과를 반환합니다.
     """
+    print("id-card Called")
     return await process_id_card_ocr(request)
     # request["requestId"]
     # return await process_document_ocr(request)

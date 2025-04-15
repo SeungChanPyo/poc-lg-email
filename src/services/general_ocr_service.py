@@ -2,7 +2,7 @@ from fastapi import HTTPException, UploadFile
 import base64
 from typing import Dict, Any
 
-from ..core.rabbitmq import send_message_async, wait_for_message
+from ..core.rabbitmq import send_message_with_shared_reply
 from ..models.general_ocr import OCRRequest, BaseImage # 모델 임포트 경로 수정
 from ..core.config import DEFAULT_OCR_TIMEOUT
 
@@ -12,8 +12,7 @@ GENERAL_OCR_QUEUE = "recognition.general.requests"
 async def process_general_ocr(request: OCRRequest):
     try:
         message = request.dict()
-        correlation_id = await send_message_async(GENERAL_OCR_QUEUE, message)
-        result_data = await wait_for_message(f"{GENERAL_OCR_QUEUE}.results", correlation_id, timeout=DEFAULT_OCR_TIMEOUT)
+        result_data = await send_message_with_shared_reply(GENERAL_OCR_QUEUE, message, timeout=DEFAULT_OCR_TIMEOUT)
         return result_data
     except HTTPException as http_exc:
         raise http_exc
