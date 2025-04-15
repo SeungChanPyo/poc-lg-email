@@ -6,7 +6,7 @@ from ..models.document_ocr import DocumentOCRRequest
 from ..models.table_ocr import TableOCRRequest
 
 from ..services.general_ocr_service import process_general_ocr, process_general_ocr_file
-from ..services.document_ocr_service import process_document_ocr
+from ..services.document_ocr_service import process_document_ocr, process_biz_card_ocr, process_biz_licence_ocr, process_id_card_ocr
 from ..services.table_ocr_service import process_table_ocr
 
 router = APIRouter(
@@ -56,6 +56,30 @@ async def document_ocr_endpoint(
     request.requestId = f"{domainId}_{templateId}"
     request.ocrType = ocrType
     return await process_document_ocr(request)
+
+@router.post("/document/biz-license")
+async def document_biz_license_ocr_endpoint(request: DocumentOCRRequest):
+    """
+    DocumentOCR API - JSON 요청 본문을 사용하여 OCR을 수행합니다.
+    사전 학습된 사업자등록증 모델의 인식 결과를 반환합니다.
+    """
+    return await process_biz_licence_ocr(request)
+
+@router.post("/document/biz-card")
+async def document_biz_card_ocr_endpoint(request: DocumentOCRRequest):
+    """
+    DocumentOCR API - JSON 요청 본문을 사용하여 OCR을 수행합니다.
+    사전 학습된 명함 모델의 인식 결과를 반환합니다.
+    """
+    return await process_biz_card_ocr(request)
+
+@router.post("/document/id-card")
+async def document_id_card_ocr_endpoint(request: DocumentOCRRequest):
+    """
+    DocumentOCR API - JSON 요청 본문을 사용하여 OCR을 수행합니다.
+    사전 학습된 주민등록증 모델의 인식 결과를 반환합니다.
+    """
+    return await process_id_card_ocr(request)
     # request["requestId"]
     # return await process_document_ocr(request)
 # 필요한 경우 여기에 다른 OCR 관련 엔드포인트 추가 가능 (예: Table OCR, Document OCR 등) 

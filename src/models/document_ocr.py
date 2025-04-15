@@ -19,8 +19,3 @@ class DocumentOCRRequest(BaseModel):
     templateName: str = ""
     modelType: Optional[str] = "UNIVERSAL"
     
-#     "ocrType": "string",
-#   "details": "string",
-#   "recognitionId": 0,
-#   "templateName": "string",
-    
